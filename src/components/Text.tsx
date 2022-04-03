@@ -1,13 +1,16 @@
 import React from 'react'
 
-export const Text = ({
-  as = 'span',
-  children
-}: {
-  as?: any
+type TextProps<C extends React.ElementType> = {
+  as?: C | 'span'
   children: React.ReactNode
-}) => {
+} & React.ComponentPropsWithoutRef<C>
+
+export const Text = <C extends React.ElementType>({
+  as = 'span',
+  children,
+  ...restProps
+}: TextProps<C>) => {
   const Component = as
 
-  return <Component>{children}</Component>
+  return <Component {...restProps}>{children}</Component>
 }
