@@ -13,12 +13,31 @@ type PolymorphicComponentProps<
   AsProp<C> & Omit<React.ComponentPropsWithoutRef<C>, PropsToOmit<C, Props>>
 >
 
-export const Text = <C extends React.ElementType = 'span'>({
-  as,
-  children,
-  ...restProps
-}: PolymorphicComponentProps<C>) => {
-  const Component = as || 'span'
+type Props<C extends React.ElementType, P> = PolymorphicComponentProps<C, P>
 
-  return <Component {...restProps}>{children}</Component>
-}
+type PolymorphicRef<C extends React.ElementType> =
+  React.ComponentPropsWithRef<C>['ref']
+
+type PolymorphicComponentPropsWithRef<
+  C extends React.ElementType,
+  P
+> = PolymorphicComponentProps<C, P> & { ref?: PolymorphicRef<C> }
+
+type TextComponent = <C extends React.ElementType>(
+  props: PolymorphicComponentPropsWithRef<C, {}>
+) => React.ReactElement<typeof props> | null
+
+export const Text: TextComponent = React.forwardRef(
+  <C extends React.ElementType = 'span'>(
+    { as, children, ...restProps }: Props<C, {}>,
+    ref?: PolymorphicRef<C>
+  ) => {
+    const Component = as || 'span'
+
+    return (
+      <Component ref={ref} {...restProps}>
+        {children}
+      </Component>
+    )
+  }
+)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Text } from './components'
 import logo from './images/logo.svg'
 import './App.css'
@@ -8,6 +8,8 @@ const Em = ({ children }: { children: React.ReactNode }) => {
 }
 
 const App = () => {
+  const ref = useRef<HTMLHeadingElement | null>(null)
+
   return (
     <div className="App">
       <header className="App-header">
@@ -15,7 +17,7 @@ const App = () => {
 
         <Text as="div">Hello Text world</Text>
 
-        <Text as="h1">
+        <Text as="h1" ref={ref}>
           Edit <code>src/App.tsx</code> and save to reload.
         </Text>
 
