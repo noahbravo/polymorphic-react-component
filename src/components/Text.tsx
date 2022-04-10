@@ -1,16 +1,24 @@
 import React from 'react'
 
-type TextProps<C extends React.ElementType> = {
-  as?: C | 'span'
-  children: React.ReactNode
-} & React.ComponentPropsWithoutRef<C>
+type AsProp<C extends React.ElementType> = {
+  as?: C
+}
 
-export const Text = <C extends React.ElementType>({
-  as = 'span',
+type PropsToOmit<C extends React.ElementType, P> = keyof (AsProp<C> & P)
+
+type PolymorphicComponentProps<
+  C extends React.ElementType,
+  Props = {}
+> = React.PropsWithChildren<
+  AsProp<C> & Omit<React.ComponentPropsWithoutRef<C>, PropsToOmit<C, Props>>
+>
+
+export const Text = <C extends React.ElementType = 'span'>({
+  as,
   children,
   ...restProps
-}: TextProps<C>) => {
-  const Component = as
+}: PolymorphicComponentProps<C>) => {
+  const Component = as || 'span'
 
   return <Component {...restProps}>{children}</Component>
 }
